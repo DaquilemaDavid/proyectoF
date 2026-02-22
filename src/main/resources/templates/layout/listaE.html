@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Lista de Establecimientos')}"></head>
+<style>
+    /* PANEL DE CONTROL DE COLORES PARA LA TABLA */
+    :root {
+        --fondo-pagina: #f4f7f6;
+        --fondo-tarjeta: #ffffff;
+        --fondo-tabla: #ffffff;
+        --color-texto-datos: #555555;
+        --color-bordes: #dee2e6;
+        --fila-par: #ffffff;
+        --fila-impar: #f9f9f9;
+        --fila-hover: rgba(0,0,0,0.03);
+        --fondo-cabecera: black;
+        --texto-cabecera: white;
+        --btn-editar-fondo: #ffc107;
+        --btn-editar-texto: #212529;
+        --btn-borrar-fondo: #dc3545;
+        --btn-borrar-texto: #ffffff;
+        --btn-nuevo-fondo: #212529;
+        --btn-nuevo-texto: #ffffff;
+    }
+
+    body { background-color: var(--fondo-pagina) !important; }
+
+    .card { 
+        background-color: var(--fondo-tarjeta) !important;
+        border-radius: 15px; 
+        overflow: hidden; 
+        border: 1px solid var(--color-bordes) !important;
+    }
+
+    #tablaEstablecimientos { 
+        background-color: var(--fondo-tabla);
+        border-collapse: collapse !important; 
+        color: var(--color-texto-datos); 
+    }
+    
+    #tablaEstablecimientos th, #tablaEstablecimientos td { border: 1px solid var(--color-bordes) !important; }
+
+    #tablaEstablecimientos thead th {
+        background-color: var(--fondo-cabecera) !important;
+        color: var(--texto-cabecera) !important;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    #tablaEstablecimientos tbody tr:nth-child(even) { background-color: var(--fila-par); }
+    #tablaEstablecimientos tbody tr:nth-child(odd) { background-color: var(--fila-impar); }
+    #tablaEstablecimientos tbody tr:hover { background-color: var(--fila-hover) !important; }
+
+    .btn-nuevo-custom { background-color: var(--btn-nuevo-fondo) !important; color: var(--btn-nuevo-texto) !important; }
+    .btn-edit-custom { background-color: var(--btn-editar-fondo) !important; color: var(--btn-editar-texto) !important; }
+    .btn-delete-custom { background-color: var(--btn-borrar-fondo) !important; color: var(--btn-borrar-texto) !important; }
+    .btn-action { padding: 5px 8px; border-radius: 4px; margin: 0 2px; border: none; }
+    
+    .dataTables_wrapper .dataTables_filter input { 
+        border-radius: 10px; border: 1px solid var(--color-bordes); padding: 5px 15px; 
+    }
+</style>
+<body>
+    
+    <nav th:replace="~{layout/base :: menu}"></nav>
+
+    <div class="container-fluid mt-5 px-4 mb-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-transparent py-4 d-flex justify-content-between align-items-center" style="border-bottom: 1px solid var(--color-bordes);">
+                <h2 class="mb-0 fw-bold text-dark">
+                    <i class="fa-solid fa-map-location-dot me-2"></i>Listado de Establecimientos
+                </h2>
+                <a th:href="@{/establecimientos/nuevo}" class="btn btn-nuevo-custom fw-bold px-4 shadow-sm">
+                    <i class="fa-solid fa-plus me-1"></i> Nuevo Establecimiento
+                </a>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tablaEstablecimientos" class="table align-middle" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Dirección</th>
+                                <th>Ciudad</th>
+                                <th>Estado</th>
+                                <th>Teléfono</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="e : ${establecimientos}">
+                                <td class="fw-bold text-center" th:text="${e.codigoEst}"></td>
+                                <td th:text="${e.descripcionEst}"></td>
+                                <td th:text="${e.direccionEst}"></td>
+                                <td th:text="${e.ciudadEst}"></td>
+                                <td>
+                                    <span class="badge" th:classappend="${e.estadoEst == 'Activo' ? 'bg-success' : 'bg-secondary'}" th:text="${e.estadoEst}"></span>
+                                </td>
+                                <td th:text="${e.telefonoEst}"></td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center">
+                                        <a th:href="@{/establecimientos/editar/{id}(id=${e.codigoEst})}" 
+                                           class="btn btn-edit-custom btn-sm btn-action shadow-sm" title="Editar">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </a>
+                                        <button th:onclick="'eliminarEstablecimiento(' + ${e.codigoEst} + ')'" 
+                                                class="btn btn-delete-custom btn-sm btn-action shadow-sm" title="Eliminar">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{layout/base :: footer}"></footer>
+    <div th:replace="~{layout/base :: scripts}"></div>
+
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            $('#tablaEstablecimientos').DataTable({
+                language: { url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json' },
+                dom: '<"row mb-3"<"col-md-6"f><"col-md-6 text-end"l>>t<"row mt-3"<"col-md-6"i><"col-md-6"p>>',
+                responsive: true
+            });
+
+            var msgError = [[${error}]];
+            var msgSuccess = [[${success}]];
+
+            if (msgError) {
+                Swal.fire({ icon: 'error', title: '¡Atención!', text: msgError, confirmButtonColor: '#d33' });
+            }
+            if (msgSuccess) {
+                Swal.fire({ icon: 'success', title: '¡Éxito!', text: msgSuccess, timer: 2500, showConfirmButton: false });
+            }
+        });
+
+        function eliminarEstablecimiento(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = [[@{/establecimientos/eliminar/}]] + id;
+                }
+            })
+        }
+    </script>
+</body>
+</html>
