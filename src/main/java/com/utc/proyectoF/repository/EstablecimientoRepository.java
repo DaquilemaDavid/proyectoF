@@ -1,5 +1,9 @@
 package com.utc.proyectoF.repository;
 
-public class EstablecimientoRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import com.utc.proyectoF.entity.Establecimiento;
 
+@Repository
+public interface EstablecimientoRepository extends JpaRepository<Establecimiento, Long> {
 }
