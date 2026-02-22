@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Editar Establecimiento')}"></head>
+<body>
+    
+    <nav th:replace="~{layout/base :: menu}"></nav>
+
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow border-0">
+                    <div class="card-header bg-warning text-dark">
+                        <h4 class="mb-0"><i class="fa-solid fa-pen-to-square me-2"></i>Editar Información del Establecimiento</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        
+                        <form id="formEditarEstablecimiento" th:action="@{/establecimientos/guardar}" th:object="${establecimiento}" method="post" novalidate>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Código del Establecimiento</label>
+                                    <input type="number" th:field="*{codigoEst}" class="form-control bg-light" readonly>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Código Empresa</label>
+                                    <input type="number" th:field="*{codigoEmp}" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Descripción / Nombre</label>
+                                <input type="text" th:field="*{descripcionEst}" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Dirección</label>
+                                <input type="text" th:field="*{direccionEst}" class="form-control">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-bold">Ciudad</label>
+                                    <input type="text" th:field="*{ciudadEst}" class="form-control">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-bold">Estado</label>
+                                    <select th:field="*{estadoEst}" class="form-select">
+                                        <option value="Activo">Activo</option>
+                                        <option value="Inactivo">Inactivo</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-bold">Teléfono</label>
+                                    <input type="text" th:field="*{telefonoEst}" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-warning btn-lg fw-bold"><i class="fa-solid fa-arrows-rotate me-2"></i>Actualizar Datos</button>
+                                <a th:href="@{/establecimientos}" class="btn btn-secondary">Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{layout/base :: footer}"></footer>
+    <div th:replace="~{layout/base :: scripts}"></div>
+
+    <script>
+        $(document).ready(function() {
+            $("#formEditarEstablecimiento").validate({
+                rules: {
+                    descripcionEst: { required: true, minlength: 3 },
+                    direccionEst: { required: true },
+                    ciudadEst: { required: true },
+                    telefonoEst: { digits: true }
+                },
+                messages: {
+                    descripcionEst: { required: "La descripción es obligatoria", minlength: "Mínimo 3 caracteres" },
+                    direccionEst: { required: "La dirección es obligatoria" },
+                    ciudadEst: { required: "La ciudad es obligatoria" },
+                    telefonoEst: { digits: "Solo números permitidos" }
+                },
+                errorElement: "div",
+                errorClass: "text-danger small mt-1", 
+                highlight: function(element) { $(element).addClass("is-invalid").removeClass("is-valid"); },
+                unhighlight: function(element) { $(element).removeClass("is-invalid").addClass("is-valid"); },
+                submitHandler: function(form) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Actualizando registro...',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(function() { form.submit(); }, 1500);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
