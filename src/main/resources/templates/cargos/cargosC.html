@@ -56,6 +56,19 @@
                                   rows="4"
                                   placeholder="Detalle o función principal del cargo"></textarea>
                     </div>
+                    
+                    <div class="mb-3">
+    					<label class="form-label fw-bold">Establecimiento</label>
+
+    					<select th:field="*{establecimiento}" class="form-select" required>
+        					<option value="">Seleccione...</option>
+
+        					<option th:each="e : ${establecimientos}"
+        							th:value="${e}"
+        							th:text="${e.descripcionEst}">
+							</option>
+    					</select>
+					</div>
 
                     <!-- ESTADO -->
                     <div class="mb-3">

@@ -8,6 +8,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.utc.proyectoF.entity.Cargo;
 import com.utc.proyectoF.service.CargoService;
+import com.utc.proyectoF.service.EstablecimientoService;
 
 @Controller
 @RequestMapping("/cargos")
@@ -15,6 +16,10 @@ public class CargoController {
 
     @Autowired
     private CargoService cargoService;
+
+    // 👇 NUEVO: inyectamos el service de establecimiento
+    @Autowired
+    private EstablecimientoService establecimientoService;
 
     // ==============================
     // LISTAR CARGOS
@@ -31,6 +36,10 @@ public class CargoController {
     @GetMapping("/nuevo")
     public String formularioNuevo(Model model) {
         model.addAttribute("cargo", new Cargo());
+
+        // 👇 Enviamos los establecimientos al HTML
+        model.addAttribute("establecimientos", establecimientoService.listar());
+
         return "cargos/cargosC";
     }
 
@@ -38,8 +47,12 @@ public class CargoController {
     // FORMULARIO EDITAR CARGO
     // ==============================
     @GetMapping("/editar/{id}")
-    public String formularioEditar(@PathVariable Long id, Model model) {
+    public String formularioEditar(@PathVariable Integer id, Model model) {
         model.addAttribute("cargo", cargoService.buscarPorId(id));
+
+        // 👇 También para editar
+        model.addAttribute("establecimientos", establecimientoService.listar());
+
         return "cargos/cargosE";
     }
 
@@ -53,6 +66,7 @@ public class CargoController {
             cargoService.guardar(cargo);
             attribute.addFlashAttribute("success", "Cargo guardado correctamente.");
         } catch (Exception e) {
+            e.printStackTrace(); // 🔴 importante para ver el error real en consola
             attribute.addFlashAttribute("error", "Error al guardar el cargo. Verifique los datos.");
         }
         return "redirect:/cargos";
@@ -62,7 +76,7 @@ public class CargoController {
     // ELIMINAR CARGO
     // ==============================
     @GetMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Long id,
+    public String eliminar(@PathVariable Integer id,
                            RedirectAttributes attribute) {
         try {
             cargoService.eliminar(id);

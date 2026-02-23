@@ -18,7 +18,7 @@ public class CargoService {
     }
 
     // Buscar un cargo por su ID
-    public Cargo buscarPorId(Long id) {
+    public Cargo buscarPorId(Integer id) {
         return repository.findById(id).orElse(null);
     }
 
@@ -28,7 +28,7 @@ public class CargoService {
     }
 
     // Eliminar un cargo
-    public void eliminar(Long id) {
+    public void eliminar(Integer id) {
         repository.deleteById(id);
     }
 }

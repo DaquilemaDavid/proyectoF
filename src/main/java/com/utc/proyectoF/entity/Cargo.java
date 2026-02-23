@@ -13,8 +13,10 @@ public class Cargo {
     @Column(name = "area_car")
     private String areaCar;
 
-    @Column(name = "codigo_est")
-    private Long codigoEst;
+    // 🔴 ESTA ES LA CORRECCION MAS IMPORTANTE
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "codigo_est")
+    private Establecimiento establecimiento;
 
     @Column(name = "codigo_sectorial_car")
     private String codigoSectorialCar;
@@ -85,11 +87,9 @@ public class Cargo {
     @Column(name = "seccion_car")
     private String seccionCar;
 
-    // Constructor vacío obligatorio
-    public Cargo() {
-    }
+    public Cargo() {}
 
-    // ===== GETTERS & SETTERS =====
+    // getters y setters
 
     public Long getCodigoCar() { return codigoCar; }
     public void setCodigoCar(Long codigoCar) { this.codigoCar = codigoCar; }
@@ -97,8 +97,9 @@ public class Cargo {
     public String getAreaCar() { return areaCar; }
     public void setAreaCar(String areaCar) { this.areaCar = areaCar; }
 
-    public Long getCodigoEst() { return codigoEst; }
-    public void setCodigoEst(Long codigoEst) { this.codigoEst = codigoEst; }
+    // 👇 IMPORTANTE
+    public Establecimiento getEstablecimiento() { return establecimiento; }
+    public void setEstablecimiento(Establecimiento establecimiento) { this.establecimiento = establecimiento; }
 
     public String getCodigoSectorialCar() { return codigoSectorialCar; }
     public void setCodigoSectorialCar(String codigoSectorialCar) { this.codigoSectorialCar = codigoSectorialCar; }
