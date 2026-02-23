@@ -31,7 +31,7 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Código del Cargo</label>
                         <input type="number"
-                               th:field="*{id}"
+                               th:field="*{codigoCar}"
                                class="form-control bg-light"
                                readonly>
                     </div>
@@ -40,7 +40,7 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Nombre del Cargo</label>
                         <input type="text"
-                               th:field="*{nombreCargo}"
+                               th:field="*{nombreCar}"
                                class="form-control"
                                required>
                     </div>
@@ -48,7 +48,7 @@
                     <!-- DESCRIPCION -->
                     <div class="mb-3">
                         <label class="form-label fw-bold">Descripción</label>
-                        <textarea th:field="*{descripcionCargo}"
+                        <textarea th:field="*{procesoCar}"
                                   class="form-control"
                                   rows="4"></textarea>
                     </div>
@@ -56,7 +56,7 @@
                     <!-- ESTADO -->
                     <div class="mb-3">
                         <label class="form-label fw-bold">Estado</label>
-                        <select th:field="*{estadoCargo}" class="form-select">
+                        <select th:field="*{estadoCar}" class="form-select">
                             <option value="ACTIVO">ACTIVO</option>
                             <option value="INACTIVO">INACTIVO</option>
                         </select>
@@ -92,10 +92,10 @@ $(document).ready(function() {
 
     $("#formEditarCargo").validate({
         rules: {
-            nombreCargo: { required: true, minlength: 3 }
+        	nombreCar: { required: true, minlength: 3 }
         },
         messages: {
-            nombreCargo: { required: "El nombre es obligatorio", minlength: "Mínimo 3 caracteres" }
+        	nombreCar: { required: "El nombre es obligatorio", minlength: "Mínimo 3 caracteres" }
         },
         errorElement: "div",
         errorClass: "text-danger small mt-1",

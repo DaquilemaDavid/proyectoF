@@ -94,19 +94,19 @@ body { background-color: var(--fondo-pagina) !important; }
 
                 <tbody>
                     <tr th:each="c : ${cargos}">
-                        <td class="fw-bold text-center" th:text="${c.id}"></td>
-                        <td th:text="${c.nombreCargo}"></td>
-                        <td th:text="${c.descripcionCargo}"></td>
+                        <td class="fw-bold text-center" th:text="${c.codigoCar}"></td>
+                        <td th:text="${c.nombreCar}"></td>
+                        <td th:text="${c.procesoCar}"></td>
 
                         <td class="text-center">
                             <div class="d-flex justify-content-center">
 
-                                <a th:href="@{/cargos/editar/{id}(id=${c.id})}" 
+                                <a th:href="@{/cargos/editar/{id}(id=${c.codigoCar})}" 
                                    class="btn btn-edit-custom btn-sm btn-action shadow-sm" title="Editar">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
 
-                                <button th:onclick="'eliminarCargo(' + ${c.id} + ')'" 
+                                <button th:onclick="'eliminarCargo(' + ${c.codigoCar} + ')'" 
                                         class="btn btn-delete-custom btn-sm btn-action shadow-sm" title="Eliminar">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
