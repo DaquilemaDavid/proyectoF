@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Editar Cargo')}"></head>
+<body>
+
+<nav th:replace="~{layout/base :: menu}"></nav>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+```
+        <div class="card shadow border-0">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0">
+                    <i class="fa-solid fa-pen-to-square me-2"></i>
+                    Editar Información del Cargo
+                </h4>
+            </div>
+
+            <div class="card-body p-4">
+
+                <form id="formEditarCargo"
+                      th:action="@{/cargos/guardar}"
+                      th:object="${cargo}"
+                      method="post"
+                      novalidate>
+
+                    <!-- CODIGO (NO EDITABLE) -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Código del Cargo</label>
+                        <input type="number"
+                               th:field="*{id}"
+                               class="form-control bg-light"
+                               readonly>
+                    </div>
+
+                    <!-- NOMBRE -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nombre del Cargo</label>
+                        <input type="text"
+                               th:field="*{nombreCargo}"
+                               class="form-control"
+                               required>
+                    </div>
+
+                    <!-- DESCRIPCION -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Descripción</label>
+                        <textarea th:field="*{descripcionCargo}"
+                                  class="form-control"
+                                  rows="4"></textarea>
+                    </div>
+
+                    <!-- ESTADO -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Estado</label>
+                        <select th:field="*{estadoCargo}" class="form-select">
+                            <option value="ACTIVO">ACTIVO</option>
+                            <option value="INACTIVO">INACTIVO</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-warning btn-lg fw-bold">
+                            <i class="fa-solid fa-arrows-rotate me-2"></i>
+                            Actualizar Datos
+                        </button>
+
+                        <a th:href="@{/cargos}" class="btn btn-secondary">
+                            Cancelar
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+```
+
+</div>
+
+<footer th:replace="~{layout/base :: footer}"></footer>
+<div th:replace="~{layout/base :: scripts}"></div>
+
+<script>
+$(document).ready(function() {
+
+    $("#formEditarCargo").validate({
+        rules: {
+            nombreCargo: { required: true, minlength: 3 }
+        },
+        messages: {
+            nombreCargo: { required: "El nombre es obligatorio", minlength: "Mínimo 3 caracteres" }
+        },
+        errorElement: "div",
+        errorClass: "text-danger small mt-1",
+        highlight: function(element) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function(element) {
+            $(element).removeClass("is-invalid").addClass("is-valid");
+        },
+        submitHandler: function(form) {
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Actualizando registro...',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            setTimeout(function() { form.submit(); }, 1500);
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>

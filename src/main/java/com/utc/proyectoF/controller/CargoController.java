@@ -40,7 +40,7 @@ public class CargoController {
     @GetMapping("/editar/{id}")
     public String formularioEditar(@PathVariable Long id, Model model) {
         model.addAttribute("cargo", cargoService.buscarPorId(id));
-        return "cargos/editarC";
+        return "cargos/cargosE";
     }
 
     // ==============================
