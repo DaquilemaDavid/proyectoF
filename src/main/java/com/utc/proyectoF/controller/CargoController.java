@@ -22,7 +22,7 @@ public class CargoController {
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("cargos", cargoService.listar());
-        return "cargos/listaC";
+        return "cargos/cargos";
     }
 
     // ==============================

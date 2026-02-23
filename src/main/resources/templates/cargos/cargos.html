@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Lista de Cargos')}"></head>
+
+<style>
+:root {
+    --fondo-pagina: #f4f7f6;
+    --fondo-tarjeta: #ffffff;
+    --fondo-tabla: #ffffff;
+    --color-texto-datos: #555555;
+    --color-bordes: #dee2e6;
+    --fila-par: #ffffff;
+    --fila-impar: #f9f9f9;
+    --fila-hover: rgba(0,0,0,0.03);
+    --fondo-cabecera: black;
+    --texto-cabecera: white;
+    --btn-editar-fondo: #ffc107;
+    --btn-editar-texto: #212529;
+    --btn-borrar-fondo: #dc3545;
+    --btn-borrar-texto: #ffffff;
+    --btn-nuevo-fondo: #212529;
+    --btn-nuevo-texto: #ffffff;
+}
+
+body { background-color: var(--fondo-pagina) !important; }
+
+.card { 
+    background-color: var(--fondo-tarjeta) !important;
+    border-radius: 15px; 
+    overflow: hidden; 
+    border: 1px solid var(--color-bordes) !important;
+}
+
+#tablaCargos { 
+    background-color: var(--fondo-tabla);
+    border-collapse: collapse !important; 
+    color: var(--color-texto-datos); 
+}
+
+#tablaCargos th, #tablaCargos td { border: 1px solid var(--color-bordes) !important; }
+
+#tablaCargos thead th {
+    background-color: var(--fondo-cabecera) !important;
+    color: var(--texto-cabecera) !important;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+#tablaCargos tbody tr:nth-child(even) { background-color: var(--fila-par); }
+#tablaCargos tbody tr:nth-child(odd) { background-color: var(--fila-impar); }
+#tablaCargos tbody tr:hover { background-color: var(--fila-hover) !important; }
+
+.btn-nuevo-custom { background-color: var(--btn-nuevo-fondo) !important; color: var(--btn-nuevo-texto) !important; }
+.btn-edit-custom { background-color: var(--btn-editar-fondo) !important; color: var(--btn-editar-texto) !important; }
+.btn-delete-custom { background-color: var(--btn-borrar-fondo) !important; color: var(--btn-borrar-texto) !important; }
+.btn-action { padding: 5px 8px; border-radius: 4px; margin: 0 2px; border: none; }
+
+.dataTables_wrapper .dataTables_filter input { 
+    border-radius: 10px; border: 1px solid var(--color-bordes); padding: 5px 15px; 
+}
+</style>
+
+<body>
+
+<nav th:replace="~{layout/base :: menu}"></nav>
+
+<div class="container-fluid mt-5 px-4 mb-5">
+    <div class="card shadow-sm">
+
+```
+    <div class="card-header bg-transparent py-4 d-flex justify-content-between align-items-center" style="border-bottom: 1px solid var(--color-bordes);">
+        <h2 class="mb-0 fw-bold text-dark">
+            <i class="fa-solid fa-briefcase me-2"></i>Listado de Cargos
+        </h2>
+
+        <a th:href="@{/cargos/nuevo}" class="btn btn-nuevo-custom fw-bold px-4 shadow-sm">
+            <i class="fa-solid fa-plus me-1"></i> Nuevo Cargo
+        </a>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+
+            <table id="tablaCargos" class="table align-middle" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre del Cargo</th>
+                        <th>Descripción</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="c : ${cargos}">
+                        <td class="fw-bold text-center" th:text="${c.id}"></td>
+                        <td th:text="${c.nombreCargo}"></td>
+                        <td th:text="${c.descripcionCargo}"></td>
+
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center">
+
+                                <a th:href="@{/cargos/editar/{id}(id=${c.id})}" 
+                                   class="btn btn-edit-custom btn-sm btn-action shadow-sm" title="Editar">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+
+                                <button th:onclick="'eliminarCargo(' + ${c.id} + ')'" 
+                                        class="btn btn-delete-custom btn-sm btn-action shadow-sm" title="Eliminar">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+```
+
+</div>
+
+<footer th:replace="~{layout/base :: footer}"></footer>
+<div th:replace="~{layout/base :: scripts}"></div>
+
+<script th:inline="javascript">
+$(document).ready(function () {
+
+    $('#tablaCargos').DataTable({
+        language: { url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json' },
+        responsive: true
+    });
+
+    var msgError = [[${error}]];
+    var msgSuccess = [[${success}]];
+
+    if (msgError) {
+        Swal.fire({ icon: 'error', title: '¡Atención!', text: msgError, confirmButtonColor: '#d33' });
+    }
+    if (msgSuccess) {
+        Swal.fire({ icon: 'success', title: '¡Éxito!', text: msgSuccess, timer: 2500, showConfirmButton: false });
+    }
+});
+
+function eliminarCargo(id) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "/cargos/eliminar/" + id;
+        }
+    })
+}
+</script>
+
+</body>
+</html>
