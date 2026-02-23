@@ -31,7 +31,7 @@ public class CargoController {
     @GetMapping("/nuevo")
     public String formularioNuevo(Model model) {
         model.addAttribute("cargo", new Cargo());
-        return "cargos/crearC";
+        return "cargos/cargosC";
     }
 
     // ==============================
